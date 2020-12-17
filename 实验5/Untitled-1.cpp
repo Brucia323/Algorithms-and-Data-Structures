@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 using namespace std;
 #define TElemType char
 
@@ -126,61 +127,22 @@ void ExchangeChild(BiTree &T)
 
 //7、实现二叉树的层次遍历（可以借用队列实现）
 
-typedef struct Queue
-{
-    BiTree data;
-    struct Queue *next;
-} QNode, *QueuePtr;
-typedef struct
-{
-    QueuePtr front; //队头指针
-    QueuePtr rear;  //队尾指针
-} LinkQueue;
-//构造一个空队列Q
-void InitQueue(LinkQueue &Q)
-{
-    Q.front = Q.rear = new QNode; //生成新结点作为头结点，队头和队尾指针指向此结点
-    Q.front->next = NULL;         //头结点的指针域置空
-}
-//插入二叉树T的结点为Q的新的队尾元素
-void EnQueue(LinkQueue &Q, BiTree &T)
-{
-    Q.rear->next = new QNode; //为入队元素分配结点空间
-    Q.rear = Q.rear->next;    //移动队尾指针
-    Q.rear->data = T;         //将数据放入队尾数据域
-}
-//判断队列Q是否为空
-bool QueueEmpty(LinkQueue Q)
-{
-    if (Q.front == Q.rear)
-        return false;
-    else
-        return true;
-}
-//队列Q的队头元素出队列，二叉树T指向对应结点
-void DeQueue(LinkQueue &Q, BiTree &T)
-{
-    if (Q.front == Q.rear)
-        return;              //队列空
-    T = Q.front->next->data; //二叉树T指向对应结点
-    Q.front = Q.front->next; //将头结点指向下一个元素
-}
 //层次遍历二叉树T
 void LevelOrderTraverse(BiTree &T)
 {
     if (T == NULL)
         return; //树空
-    LinkQueue Q;
-    InitQueue(Q);
-    EnQueue(Q, T);
-    while (QueueEmpty(Q))
+    queue<BiTree> Q;
+    Q.push(T);
+    while (!Q.empty())
     {
-        DeQueue(Q, T);
+        T = Q.front();
+        Q.pop();
         cout << T->data; //输出对应结点数据
         if (T->lchild)
-            EnQueue(Q, T->lchild); //左孩子入队
+            Q.push(T->lchild); //左孩子入队
         if (T->rchild)
-            EnQueue(Q, T->rchild); //右孩子入队
+            Q.push(T->rchild); //右孩子入队
     }
 }
 
