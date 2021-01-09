@@ -8,7 +8,7 @@ string filename; //文件名
 //内容单链表
 typedef struct Content
 {
-    char text[80]; //文本
+    char text[81]; //文本
     struct Content *next;
 } Contentnode, *Contentlist;
 //活区单链表
@@ -26,64 +26,68 @@ void Initialization()
     cin >> filename;
     if (filename != "")
     {
-        file.open(filename + ".txt");
-        file.close();
+        file.open(filename + ".txt"); //打开文件
+        file.close();                 //关闭文件
     }
     else
     {
-        cout << "输入和输出文件名不能相同" << endl;
+        cout << "文件名不能为空" << endl;
         system("pause");
         Initialization();
     }
 }
+//活区初始化
 void Initialization(Livearealist &l)
 {
     l = new Liveareanode;
     l->next = NULL;
 }
+//内容初始化
 void Initialization(Contentlist &c)
 {
     c = new Contentnode;
     c->next = NULL;
 }
 //插入
+void Insert(Contentlist &c,char text[])
+{
+    Contentlist c1 = c, node;
+    while (c1->next)
+    {
+        c1 = c1->next;
+    }
+    node = new Contentnode;
+    strcpy(node->text, text);
+    node->next = c1->next;
+    c1->next = node;
+}
 void Insert(Livearealist &l)
 {
     int line, count, i = 0;
     string text;
-    char text1[80], text2[80], text3[80], text4[80];
-    Livearealist l2, node;
+    char text1[81];
+    Livearealist l1, node;
     cin >> line >> text;
+    //行号在活区范围内
     if (line > 0 && line < activemaxlen)
     {
-        l2 = l;
-        for (int i = 0; l2->next && i < line; i++)
+        l1 = l;
+        //查找第i个结点
+        for (int i = 0; l1->next && i < line; i++)
         {
-            l2 = l2->next;
+            l1 = l1->next;
         }
         node = new Liveareanode;
         node->line = line + 1;
         Initialization(node->content);
         for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
         {
-            strcpy(text1, text.substr(j, k).c_str());
-            Insert(node->content, text1);
+            strcpy(text1, text.substr(j, k).c_str()); //分割字符串
+            Insert(node->content,text1);
         }
-        node->next = l2->next;
-        l2->next = node;
+        node->next = l1->next;
+        l1->next = node;
     }
-}
-void Insert(Contentlist &c, char text[])
-{
-    Contentlist c2 = c, node;
-    while (c2->next)
-    {
-        c2 = c2->next;
-    }
-    node = new Contentnode;
-    strcpy(node->text, text);
-    node->next = c2->next;
-    c2->next = node;
 }
 int main(void)
 {
