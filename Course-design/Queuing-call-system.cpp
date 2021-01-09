@@ -13,13 +13,13 @@ typedef struct
     QueuePtr rear;  //队尾指针
 } LinkQueue;
 //初始化
-void InitQueue(LinkQueue &q)
+void Initialization(LinkQueue &q)
 {
     q.front = q.rear = new QNode; //生成新结点作为头结点，队头和队尾指针指向此结点
     q.front->next = NULL;         //头指针的指针域置空
 }
 //排队
-void EnQueue(LinkQueue &q)
+void Lineup(LinkQueue &q)
 {
     QueuePtr p = new QNode; //为入队元素分配结点空间，用指针p指向
     p->Number = ++number;   //取号
@@ -28,7 +28,7 @@ void EnQueue(LinkQueue &q)
     q.rear = p;       //修改队尾指针
 }
 //叫号
-void GetHead(LinkQueue q, int vip)
+void Call(LinkQueue q, int vip)
 {
     int i;
     if (q.front != q.rear)
@@ -75,8 +75,8 @@ void GetHead(LinkQueue q, int vip)
         cout << "无人排队" << endl;
     }
 }
-//出队，办理业务
-void DeQueue(LinkQueue &q, int window)
+//办理业务
+void Conduct_business(LinkQueue &q, int window)
 {
     if (state[window] != -1)
     {
@@ -99,7 +99,8 @@ void DeQueue(LinkQueue &q, int window)
     delete p; //释放空间
     cout << "开始办理业务" << endl;
 }
-void DeQueue(LinkQueue &q)
+//跳过一号
+void Skip(LinkQueue &q)
 {
     if (q.front == q.rear)
     {
@@ -169,8 +170,8 @@ void Finish(int e)
 int main(void)
 {
     LinkQueue q, vipq; //普通队列，VIP队列
-    InitQueue(q);
-    InitQueue(vipq);
+    Initialization(q);
+    Initialization(vipq);
     while (1)
     {
         int option;
@@ -191,10 +192,10 @@ int main(void)
             switch (option)
             {
             case 1:
-                EnQueue(q);
+                Lineup(q);
                 break;
             case 2:
-                EnQueue(vipq);
+                Lineup(vipq);
                 break;
             default:
                 break;
@@ -209,10 +210,10 @@ int main(void)
             switch (option)
             {
             case 1:
-                GetHead(q, 0);
+                Call(q, 0);
                 break;
             case 2:
-                GetHead(vipq, 1);
+                Call(vipq, 1);
                 break;
             default:
                 break;
@@ -233,11 +234,11 @@ int main(void)
             case 2:
             case 3:
             case 4:
-                DeQueue(q, option);
+                Conduct_business(q, option);
                 break;
             case 5:
             case 6:
-                DeQueue(vipq, option);
+                Conduct_business(vipq, option);
                 break;
             default:
                 break;
@@ -284,23 +285,23 @@ int main(void)
             Finish(option);
             system("pause");
             break;
-        // case 7:
-        //     cout << "1.普通客户队列" << endl;
-        //     cout << "2.VIP客户队列" << endl;
-        //     cin >> option;
-        //     switch (option)
-        //     {
-        //     case 1:
-        //         DeQueue(q);
-        //         break;
-        //     case 2:
-        //         DeQueue(vipq);
-        //         break;
-        //     default:
-        //         break;
-        //     }
-        //     system("pause");
-        //     break;
+        case 7:
+            cout << "1.普通客户队列" << endl;
+            cout << "2.VIP客户队列" << endl;
+            cin >> option;
+            switch (option)
+            {
+            case 1:
+                Skip(q);
+                break;
+            case 2:
+                Skip(vipq);
+                break;
+            default:
+                break;
+            }
+            system("pause");
+            break;
         default:
             break;
         }
