@@ -6,6 +6,7 @@ using namespace std;
 #define activemaxlen 100
 #define x 20
 string inputfilename, outputfilename; //文件名
+int count = 0;
 //内容单链表
 typedef struct Content
 {
@@ -45,7 +46,7 @@ void Insert(Contentlist &c, char text[])
 //初始化
 void Initialization(Livearealist &l)
 {
-    char buffer[320],text1[81];
+    char buffer[320], text1[81];
     string text;
     fstream inputfile, outputfile;
     cout << "请输入“输入文件”文件名：（若无，则用空格表示）";
@@ -61,7 +62,7 @@ void Initialization(Livearealist &l)
         }
         else
         {
-            inputfile.open(inputfilename + ".txt"); //打开文件
+            inputfile.open(inputfilename + ".txt", ios::_Nocreate); //打开文件
             Livearealist l1, node;
             l1 = l;
             for (int i = 0; i < activemaxlen - x; i++)
@@ -70,6 +71,7 @@ void Initialization(Livearealist &l)
                 node->line = i + 1;
                 Inicontent(node->content);
                 inputfile.getline(buffer, 320);
+                count++;
                 text = (string)buffer;
                 for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
                 {
@@ -79,6 +81,10 @@ void Initialization(Livearealist &l)
                 node->next = l1->next;
                 l1->next = node;
                 l1 = l1->next;
+                if (inputfile.eof())
+                {
+                    break;
+                }
             }
             inputfile.close();                        //关闭文件
             outputfile.open(outputfilename + ".txt"); //打开文件
@@ -171,7 +177,54 @@ void Delete(Livearealist &l)
     }
 }
 //活区切换
-void Switch(Livearealist &l);
+void Switch(Livearealist &l)
+{
+    fstream inputfile, outputfile;
+    Livearealist l1, node;
+    l1 = l;
+    outputfile.open(outputfilename + ".txt", ios::app);
+    if (outputfile.is_open())
+    {
+        while (l1)
+        {
+            while (l1->content)
+            {
+                outputfile << l1->content->text;
+                l1->content = l1->content->next;
+            }
+            outputfile << endl;
+            node = l1;
+            l1 = l1->next;
+            delete node;
+        }
+    }
+    outputfile.close();
+    if (inputfilename != " ")
+    {
+        char buffer[320], text1[81];
+        string text;
+        inputfile.open(inputfilename + ".txt", ios::_Nocreate); //打开文件
+        Livearealist l1, node;
+        l1 = l;
+        for (int i = 0; i < activemaxlen - x; i++)
+        {
+            node = new Liveareanode;
+            node->line = i + 1;
+            Inicontent(node->content);
+            inputfile.getline(buffer, 320);
+            text = (string)buffer;
+            for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
+            {
+                strcpy(text1, text.substr(j, k).c_str()); //分割字符串
+                Insert(node->content, text1);
+            }
+            node->next = l1->next;
+            l1->next = node;
+            l1 = l1->next;
+        }
+        inputfile.close(); //关闭文件
+    }
+}
 int main(void)
 {
     char cmd;
