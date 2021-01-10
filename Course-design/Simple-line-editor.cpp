@@ -6,7 +6,7 @@ using namespace std;
 #define activemaxlen 100
 #define x 20
 string inputfilename, outputfilename; //文件名
-int count = 0;
+int count1 = 0;
 //内容单链表
 typedef struct Content
 {
@@ -71,7 +71,7 @@ void Initialization(Livearealist &l)
                 node->line = i + 1;
                 Inicontent(node->content);
                 inputfile.getline(buffer, 320);
-                count++;
+                count1++;
                 text = (string)buffer;
                 for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
                 {
@@ -106,9 +106,29 @@ void Insert(Livearealist &l)
     char text1[81];
     Livearealist l1, node;
     cin >> line >> text;
+    if (count1 == activemaxlen)
+    {
+        l1 = l;
+        node = l1->next;
+        fstream outputfile;
+        outputfile.open(outputfilename + ".txt", ios::app);
+        node->content = node->content->next;
+        while (node->content)
+        {
+            outputfile << node->content->text;
+            node->content = node->content->next;
+            outputfile << endl;
+        }
+        l1->next = node->next;
+        delete node;
+        for (l1 = l1->next; l1; l1->line = l1->line - 1, l1 = l1->next)
+            ;
+        count1--;
+    }
     //行号在活区范围内
     if (line >= 0 && line < activemaxlen)
     {
+        count1++;
         l1 = l;
         //查找第i个结点
         for (int i = 0; l1->next && i < line; i++, l1 = l1->next)
@@ -125,12 +145,13 @@ void Insert(Livearealist &l)
         l1->next = node;
         l1 = l1->next;
         //修改后续行号
-        for (l1 = l1->next; l1->next; l1 = l1->next, l1->line = l1->line + 1)
+        for (l1 = l1->next; l1; l1->line = l1->line + 1, l1 = l1->next)
             ;
     }
-    else if (line == 0)
+    else
     {
-        l1 = l;
+        cout << "输入错误" << endl;
+        return;
     }
 }
 //删除
@@ -144,6 +165,11 @@ void Delete(Livearealist &l)
     if (space == ' ')
     {
         cin >> line2;
+    }
+    if (line1 <= 0 || line2 < 0 || line1 >= activemaxlen || line2 >= activemaxlen)
+    {
+        cout << "输入错误" << endl;
+        return;
     }
     if (line2 == 0)
     {
@@ -187,23 +213,30 @@ void Switch(Livearealist &l)
     {
         while (l1)
         {
-            while (l1->content)
+            node = l1->next;
+            node->content = node->content->next;
+            while (node->content)
             {
-                outputfile << l1->content->text;
-                l1->content = l1->content->next;
+                outputfile << node->content->text;
+                node->content = node->content->next;
             }
             outputfile << endl;
-            node = l1;
-            l1 = l1->next;
+            l1->next = node->next;
             delete node;
         }
     }
     outputfile.close();
     if (inputfilename != " ")
     {
+        count1 = 0;
         char buffer[320], text1[81];
         string text;
         inputfile.open(inputfilename + ".txt", ios::_Nocreate); //打开文件
+        if (inputfile.eof())
+        {
+            inputfile.close();
+            return;
+        }
         Livearealist l1, node;
         l1 = l;
         for (int i = 0; i < activemaxlen - x; i++)
@@ -212,6 +245,7 @@ void Switch(Livearealist &l)
             node->line = i + 1;
             Inicontent(node->content);
             inputfile.getline(buffer, 320);
+            count1++;
             text = (string)buffer;
             for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
             {
@@ -221,8 +255,42 @@ void Switch(Livearealist &l)
             node->next = l1->next;
             l1->next = node;
             l1 = l1->next;
+            if (inputfile.eof())
+            {
+                break;
+            }
         }
         inputfile.close(); //关闭文件
+    }
+}
+//活区显示
+void Display(Livearealist l)
+{
+    string text;
+    char key;
+    int i;
+    static Livearealist l1 = l->next;
+    for (i = 0; i < 20 && l1; i++)
+    {
+        for (l1->content = l1->content->next; l1->content; l1->content = l1->content->next)
+        {
+            text += l1->content->text;
+        }
+        cout << l1->line << " " << text << endl;
+        l1 = l1->next;
+    }
+    if (i == 20)
+    {
+        cout << "下一页[Y/N]? ";
+        cin >> key;
+        if (key == 'Y' || key == 'y')
+        {
+            Display(l1);
+        }
+        else
+        {
+            return;
+        }
     }
 }
 int main(void)
@@ -233,17 +301,25 @@ int main(void)
     Initialization(l);
     while (1)
     {
+        cout << "输入指令" << endl;
         cin >> cmd;
         switch (cmd)
         {
         case 'i':
             Insert(l);
+            system("pause");
             break;
         case 'd':
             Delete(l);
+            system("pause");
             break;
         case 'n':
             Switch(l);
+            system("pause");
+            break;
+        case 'p':
+            Display(l);
+            system("pause");
             break;
         default:
             break;
