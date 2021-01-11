@@ -88,7 +88,7 @@ void Initialization(Livearealist &l)
                     break;
                 }
             }
-            inputfile.close();                                //关闭文件
+            // inputfile.close();                                //关闭文件
             outputfile.open((string)outputfilename + ".txt"); //打开文件
             outputfile.close();                               //关闭文件
         }
@@ -217,7 +217,7 @@ void Switch(Livearealist &l)
     outputfile.open((string)outputfilename + ".txt", ios::app);
     if (outputfile.is_open())
     {
-        while (l1)
+        while (l1->next)
         {
             node = l1->next;
             node->content = node->content->next;
@@ -232,12 +232,12 @@ void Switch(Livearealist &l)
         }
     }
     outputfile.close();
-    if (inputfilename != " ")
+    if (inputfilename != "")
     {
         count1 = 0;
         char buffer[320], text1[81];
         string text;
-        inputfile.open((string)inputfilename + ".txt"); //打开文件
+        // inputfile.open((string)inputfilename + ".txt"); //打开文件
         if (inputfile.eof())
         {
             inputfile.close();
@@ -266,7 +266,7 @@ void Switch(Livearealist &l)
                 break;
             }
         }
-        inputfile.close(); //关闭文件
+        // inputfile.close(); //关闭文件
     }
 }
 //活区显示
@@ -334,6 +334,7 @@ int main(void)
             system("pause");
             break;
         default:
+            cout << "命令输入错误，请重新输入" << endl;
             break;
         }
     }
