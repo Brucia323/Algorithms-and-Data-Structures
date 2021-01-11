@@ -20,17 +20,19 @@ typedef struct Livearea
     Contentlist content; //内容
     struct Livearea *next;
 } Liveareanode, *Livearealist;
-//活区初始化
-void Inilivearea(Livearealist &l)
-{
-    l = new Liveareanode;
-    l->next = NULL;
-}
 //内容初始化
 void Inicontent(Contentlist &c)
 {
     c = new Contentnode;
     c->next = NULL;
+}
+//活区初始化
+void Inilivearea(Livearealist &l)
+{
+    l = new Liveareanode;
+    l->line = 0;
+    Inicontent(l->content);
+    l->next = NULL;
 }
 //内容插入
 void Insert(Contentlist &c, char text[])
@@ -49,20 +51,20 @@ void Initialization(Livearealist &l)
     char buffer[320], text1[81];
     string text;
     fstream inputfile, outputfile;
-    cout << "请输入“输入文件”文件名：（若无，则用空格表示）";
-    cin >> inputfilename;
+    cout << "请输入“输入文件”文件名：";
+    getline(cin, inputfilename);
     cout << "请输入“输出文件”文件名：";
     cin >> outputfilename;
     if (inputfilename != outputfilename)
     {
-        if (inputfilename == " ")
+        if (inputfilename == "")
         {
-            outputfile.open(outputfilename + ".txt"); //打开文件
-            outputfile.close();                       //关闭文件
+            outputfile.open((string)outputfilename + ".txt"); //打开文件
+            outputfile.close();                               //关闭文件
         }
         else
         {
-            inputfile.open(inputfilename + ".txt", ios::_Nocreate); //打开文件
+            inputfile.open((string)inputfilename + ".txt"); //打开文件
             Livearealist l1, node;
             l1 = l;
             for (int i = 0; i < activemaxlen - x; i++)
@@ -86,9 +88,9 @@ void Initialization(Livearealist &l)
                     break;
                 }
             }
-            inputfile.close();                        //关闭文件
-            outputfile.open(outputfilename + ".txt"); //打开文件
-            outputfile.close();                       //关闭文件
+            inputfile.close();                                //关闭文件
+            outputfile.open((string)outputfilename + ".txt"); //打开文件
+            outputfile.close();                               //关闭文件
         }
     }
     else
@@ -105,13 +107,14 @@ void Insert(Livearealist &l)
     string text;
     char text1[81];
     Livearealist l1, node;
-    cin >> line >> text;
+    cin >> line;
+    getline(cin, text);
     if (count1 == activemaxlen)
     {
         l1 = l;
         node = l1->next;
         fstream outputfile;
-        outputfile.open(outputfilename + ".txt", ios::app);
+        outputfile.open((string)outputfilename + ".txt", ios::app);
         node->content = node->content->next;
         while (node->content)
         {
@@ -134,7 +137,7 @@ void Insert(Livearealist &l)
         for (int i = 0; l1->next && i < line; i++, l1 = l1->next)
             ;
         node = new Liveareanode;
-        node->line = line + 1;
+        node->line = l1->line + 1;
         Inicontent(node->content);
         for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
         {
@@ -158,11 +161,11 @@ void Insert(Livearealist &l)
 void Delete(Livearealist &l)
 {
     int line1, line2 = 0;
-    char space;
+    // char space;
     Livearealist l1, l2, node1, node2;
-    cin >> line1 >> space;
+    cin >> line1;
     //判断格式
-    if (space == ' ')
+    if (getchar() == ' ')
     {
         cin >> line2;
     }
@@ -197,9 +200,12 @@ void Delete(Livearealist &l)
         delete l2;
     }
     //修改行号
-    for (l1 = l1->next; l1; l1 = l1->next)
+    if (l1->next)
     {
-        l1->line = ++line1;
+        for (l1->next->line = l1->line + 1, l1 = l1->next; l1->next; l1 = l1->next)
+        {
+            l1->next->line = l1->line + 1;
+        }
     }
 }
 //活区切换
@@ -208,7 +214,7 @@ void Switch(Livearealist &l)
     fstream inputfile, outputfile;
     Livearealist l1, node;
     l1 = l;
-    outputfile.open(outputfilename + ".txt", ios::app);
+    outputfile.open((string)outputfilename + ".txt", ios::app);
     if (outputfile.is_open())
     {
         while (l1)
@@ -231,7 +237,7 @@ void Switch(Livearealist &l)
         count1 = 0;
         char buffer[320], text1[81];
         string text;
-        inputfile.open(inputfilename + ".txt", ios::_Nocreate); //打开文件
+        inputfile.open((string)inputfilename + ".txt"); //打开文件
         if (inputfile.eof())
         {
             inputfile.close();
@@ -267,17 +273,22 @@ void Switch(Livearealist &l)
 void Display(Livearealist l)
 {
     string text;
+    Livearealist node;
     char key;
     int i;
-    static Livearealist l1 = l->next;
-    for (i = 0; i < 20 && l1; i++)
+    for (i = 0; i < 20 && l; i++)
     {
-        for (l1->content = l1->content->next; l1->content; l1->content = l1->content->next)
+        text = "";
+        for (node->content = l->content->next; node->content; node->content = node->content->next)
         {
-            text += l1->content->text;
+            text += node->content->text;
+            if (node->content->next == NULL)
+            {
+                break;
+            }
         }
-        cout << l1->line << " " << text << endl;
-        l1 = l1->next;
+        cout << l->line << " " << text << endl;
+        l = l->next;
     }
     if (i == 20)
     {
@@ -285,7 +296,7 @@ void Display(Livearealist l)
         cin >> key;
         if (key == 'Y' || key == 'y')
         {
-            Display(l1);
+            Display(l);
         }
         else
         {
@@ -296,7 +307,7 @@ void Display(Livearealist l)
 int main(void)
 {
     char cmd;
-    Livearealist l;
+    Livearealist l, l1;
     Inilivearea(l);
     Initialization(l);
     while (1)
@@ -318,7 +329,8 @@ int main(void)
             system("pause");
             break;
         case 'p':
-            Display(l);
+            l1 = l->next;
+            Display(l1);
             system("pause");
             break;
         default:
