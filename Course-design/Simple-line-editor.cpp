@@ -4,9 +4,9 @@
 #include <cstring>
 using namespace std;
 #define activemaxlen 100
-#define x 20
+#define x 95
 string inputfilename, outputfilename; //文件名
-int count1 = 0;
+int count1;
 //内容单链表
 typedef struct Content
 {
@@ -45,52 +45,74 @@ void Insert(Contentlist &c, char text[])
     node->next = c1->next;
     c1->next = node;
 }
+//创建缓存文件
+void Createcache()
+{
+    fstream cachefile;
+    cachefile.open("cache.txt", ios::trunc);
+    fstream inputfile;
+    inputfile.open((string)inputfilename + ".txt");
+    char buffer[320];
+    while (!inputfile.eof())
+    {
+        inputfile.getline(buffer, 320);
+        cachefile << buffer << endl;
+    }
+    inputfile.close();
+    cachefile.close();
+}
+//修改缓存文件
+void Modifycache();
+//读取内容
+void Read(Livearealist &l)
+{
+    fstream cachefile;
+    count1 = 0;
+    char buffer[320], text1[81];
+    string text;
+    cachefile.open("cache.txt"); //打开文件
+    if (cachefile.eof())
+    {
+        cachefile.close();
+        return;
+    }
+    Livearealist l1, node;
+    l1 = l;
+    for (int i = 0; i < activemaxlen - x; i++)
+    {
+        node = new Liveareanode;
+        node->line = i + 1;
+        Inicontent(node->content);
+        cachefile.getline(buffer, 320);
+        count1++;
+        text = (string)buffer;
+        for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
+        {
+            strcpy(text1, text.substr(j, k).c_str()); //分割字符串
+            Insert(node->content, text1);
+        }
+        node->next = l1->next;
+        l1->next = node;
+        l1 = l1->next;
+        if (cachefile.eof())
+        {
+            break;
+        }
+    }
+    cachefile.close(); //关闭文件
+}
 //初始化
 void Initialization(Livearealist &l)
 {
-    char buffer[320], text1[81];
-    string text;
-    fstream inputfile, outputfile;
     cout << "请输入“输入文件”文件名：";
     getline(cin, inputfilename);
     cout << "请输入“输出文件”文件名：";
     cin >> outputfilename;
     if (inputfilename != outputfilename)
     {
-        if (inputfilename == "")
+        if (inputfilename != "")
         {
-            outputfile.open((string)outputfilename + ".txt"); //打开文件
-            outputfile.close();                               //关闭文件
-        }
-        else
-        {
-            inputfile.open((string)inputfilename + ".txt"); //打开文件
-            Livearealist l1, node;
-            l1 = l;
-            for (int i = 0; i < activemaxlen - x; i++)
-            {
-                node = new Liveareanode;
-                node->line = i + 1;
-                Inicontent(node->content);
-                inputfile.getline(buffer, 320);
-                count1++;
-                text = (string)buffer;
-                for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
-                {
-                    strcpy(text1, text.substr(j, k).c_str()); //分割字符串
-                    Insert(node->content, text1);
-                }
-                node->next = l1->next;
-                l1->next = node;
-                l1 = l1->next;
-                if (inputfile.eof())
-                {
-                    break;
-                }
-            }
-            // inputfile.close();                                //关闭文件
-            outputfile.open((string)outputfilename + ".txt"); //打开文件
-            outputfile.close();                               //关闭文件
+            Read(l);
         }
     }
     else
@@ -211,10 +233,10 @@ void Delete(Livearealist &l)
 //活区切换
 void Switch(Livearealist &l)
 {
-    fstream inputfile, outputfile;
+    fstream outputfile;
     Livearealist l1, node;
     l1 = l;
-    outputfile.open((string)outputfilename + ".txt", ios::app);
+    outputfile.open((string)outputfilename + ".txt", ios::app); //追加打开
     if (outputfile.is_open())
     {
         while (l1->next)
@@ -231,42 +253,10 @@ void Switch(Livearealist &l)
             delete node;
         }
     }
-    outputfile.close();
+    outputfile.close(); //关闭
     if (inputfilename != "")
     {
-        count1 = 0;
-        char buffer[320], text1[81];
-        string text;
-        // inputfile.open((string)inputfilename + ".txt"); //打开文件
-        if (inputfile.eof())
-        {
-            inputfile.close();
-            return;
-        }
-        Livearealist l1, node;
-        l1 = l;
-        for (int i = 0; i < activemaxlen - x; i++)
-        {
-            node = new Liveareanode;
-            node->line = i + 1;
-            Inicontent(node->content);
-            inputfile.getline(buffer, 320);
-            count1++;
-            text = (string)buffer;
-            for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
-            {
-                strcpy(text1, text.substr(j, k).c_str()); //分割字符串
-                Insert(node->content, text1);
-            }
-            node->next = l1->next;
-            l1->next = node;
-            l1 = l1->next;
-            if (inputfile.eof())
-            {
-                break;
-            }
-        }
-        // inputfile.close(); //关闭文件
+        Read(l);
     }
 }
 //活区显示
