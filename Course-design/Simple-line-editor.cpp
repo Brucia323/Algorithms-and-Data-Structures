@@ -49,40 +49,64 @@ void Insert(Contentlist &c, char text[])
 void Createcache()
 {
     fstream cachefile, inputfile;
-    cachefile.open("cache.txt", ios::trunc);
     inputfile.open((string)inputfilename + ".txt");
+    cachefile.open("cache.txt", ios::out); //无法使用ios::trunc
     char buffer[320];
-    while (!inputfile.eof())
+    if (cachefile.is_open())
     {
-        inputfile.getline(buffer, 320);
-        cachefile << buffer << endl;
+        while (!inputfile.eof())
+        {
+            inputfile.getline(buffer, 320);
+            cachefile << buffer;
+            if (!inputfile.eof())
+            {
+                cachefile << endl;
+            }
+        }
     }
-    inputfile.close();
     cachefile.close();
-    system("pause");
+    inputfile.close();
 }
 //修改缓存文件
 void Modifycache()
 {
     fstream cachefile, _cachefile;
     char buffer[320];
-    cachefile.open("cache.txt");
-    _cachefile.open("_cache.txt");
+    _cachefile.open("_cache.txt", ios::out);
+    cachefile.open("cache.txt", ios::in);
     for (int i = 0; i < activemaxlen - x; i++)
     {
         cachefile.getline(buffer, 320);
+        if (cachefile.eof())
+        {
+            cachefile.close();
+            _cachefile.close();
+            remove("_cache.txt");
+            remove("cache.txt");
+            return;
+        }
     }
     while (!cachefile.eof())
     {
         cachefile.getline(buffer, 320);
-        _cachefile << buffer << endl;
+        _cachefile << buffer;
+        if (!cachefile.eof())
+        {
+            _cachefile << endl;
+        }
     }
     cachefile.close();
-    cachefile.open("cache.txt", ios::trunc);
+    _cachefile.close();
+    cachefile.open("cache.txt", ios::out);
+    _cachefile.open("_cache.txt", ios::in);
     while (!_cachefile.eof())
     {
         _cachefile.getline(buffer, 320);
-        cachefile << buffer << endl;
+        cachefile << buffer;
+        if (!_cachefile.eof())
+        {
+            cachefile << endl;
+        }
     }
     cachefile.close();
     _cachefile.close();
@@ -275,7 +299,10 @@ void Switch(Livearealist &l)
                 node->content = node->content->next;
                 outputfile << node->content->text;
             }
-            outputfile << endl;
+            if (l1->next)
+            {
+                outputfile << endl;
+            }
             l1->next = node->next;
             delete node;
         }
@@ -283,14 +310,20 @@ void Switch(Livearealist &l)
     outputfile.close(); //关闭
     if (inputfilename != "")
     {
-        Read(l);
+        fstream cachefile;
+        cachefile.open("cache.txt", ios::in);
+        if (cachefile.is_open())
+        {
+            cachefile.close();
+            Read(l);
+        }
     }
 }
 //活区显示
 void Display(Livearealist l)
 {
     string text;
-    Livearealist node = l;
+    Livearealist node; //使用node=l对node进行初始化会出现bug
     char key;
     int i;
     for (i = 0; i < 20 && l; i++)
