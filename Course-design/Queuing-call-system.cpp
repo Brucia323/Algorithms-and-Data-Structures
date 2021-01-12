@@ -4,7 +4,7 @@ int number = 0;                              //排队号码
 int state[7] = {-1, -1, -1, -1, -1, -1, -1}; //窗口状态
 typedef struct QNode
 {
-    int Number;         //号码
+    int data;           //号码
     struct QNode *next; //后继指针
 } QNode, *QueuePtr;
 typedef struct
@@ -18,20 +18,73 @@ void Initialization(LinkQueue &q)
     q.front = q.rear = new QNode; //生成新结点作为头结点，队头和队尾指针指向此结点
     q.front->next = NULL;         //头指针的指针域置空
 }
-//排队
-void Lineup(LinkQueue &q)
+//入队
+void qpush(LinkQueue &q, int e)
 {
     QueuePtr p = new QNode; //为入队元素分配结点空间，用指针p指向
-    p->Number = ++number;   //取号
+    p->data = e;
     p->next = NULL;
     q.rear->next = p; //排队
     q.rear = p;       //修改队尾指针
+}
+//判空
+int qempty(LinkQueue q)
+{
+    if (q.front == q.rear)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+//出队
+void qpop(LinkQueue &q)
+{
+    if (qempty(q))
+    {
+        return;
+    }
+    QueuePtr p = q.front->next;
+    q.front->next = p->next;
+    if (q.rear == p)
+    {
+        q.rear = q.front;
+    }
+    delete p;
+}
+//返回队列中的元素个数
+int qsize(LinkQueue q)
+{
+    int count = 0;
+    QueuePtr p = q.front->next;
+    while (!qempty(q))
+    {
+        count++;
+        p = p->next;
+    }
+    return count;
+}
+//取队头元素
+int qfront(LinkQueue q)
+{
+    if (!qempty(q))
+    {
+        return q.front->next->data;
+    }
+}
+//排队
+void Lineup(LinkQueue &q)
+{
+    number = number + 1; //取号
+    qpush(q, number);
 }
 //叫号
 void Call(LinkQueue q, int vip)
 {
     int i;
-    if (q.front != q.rear)
+    if (!qempty(q))
     {
         if (vip == 0)
         {
@@ -44,7 +97,7 @@ void Call(LinkQueue q, int vip)
             }
             if (i <= 4)
             {
-                cout << "请" << q.front->next->Number << "号到" << i << "号窗口办理业务" << endl;
+                cout << "请" << qfront(q) << "号到" << i << "号窗口办理业务" << endl;
             }
             else
             {
@@ -62,7 +115,7 @@ void Call(LinkQueue q, int vip)
             }
             if (i <= 6)
             {
-                cout << "请" << q.front->next->Number << "号到" << i << "号窗口办理业务" << endl;
+                cout << "请" << qfront(q) << "号到" << i << "号窗口办理业务" << endl;
             }
             else
             {
@@ -83,37 +136,25 @@ void Conduct_business(LinkQueue &q, int window)
         cout << "当前窗口正在办理业务" << endl;
         return;
     }
-    if (q.front == q.rear)
+    if (qempty(q))
     {
         state[window] = 0; //未取号办理业务
         cout << "开始办理业务" << endl;
         return;
     }
-    QueuePtr p = q.front->next; //p指向队头元素
-    state[window] = p->Number;  //该号码正在第window号窗口办理业务
-    q.front->next = p->next;    //修改头结点的指针域
-    if (q.rear == p)
-    {
-        q.rear = q.front; //最后一个元素被删，队尾指针指向头结点
-    }
-    delete p; //释放空间
+    state[window] = qfront(q); //该号码正在第window号窗口办理业务
+    qpop(q);
     cout << "开始办理业务" << endl;
 }
 //跳过一号
 void Skip(LinkQueue &q)
 {
-    if (q.front == q.rear)
+    if (qempty(q))
     {
         return;
     }
-    QueuePtr p = q.front->next; //p指向队头元素
-    cout << "已跳过" << p->Number << "号" << endl;
-    q.front->next = p->next; //修改头结点的指针域
-    if (q.rear == p)
-    {
-        q.rear = q.front; //最后一个元素被删，队尾指针指向头结点
-    }
-    delete p; //释放空间
+    cout << "已跳过" << qfront(q) << "号" << endl;
+    qpop(q);
 }
 //窗口状态
 void Window(int e)
@@ -152,14 +193,7 @@ void Window()
 //排队状态
 void Queuing(LinkQueue q)
 {
-    int count = 0;
-    QueuePtr p = q.front->next;
-    while (p)
-    {
-        count++;
-        p = p->next;
-    }
-    cout << "当前共" << count << "人等待" << endl;
+    cout << "当前共" << qsize(q) << "人等待" << endl;
 }
 //办理结束
 void Finish(int e)
@@ -181,7 +215,7 @@ int main(void)
         cout << "4.窗口状态" << endl;
         cout << "5.排队状态" << endl;
         cout << "6.办理结束" << endl;
-        // cout << "7.跳过一号" << endl;
+        cout << "7.跳过一号" << endl;
         cin >> option;
         switch (option)
         {
