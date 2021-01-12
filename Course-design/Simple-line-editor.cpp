@@ -48,9 +48,8 @@ void Insert(Contentlist &c, char text[])
 //创建缓存文件
 void Createcache()
 {
-    fstream cachefile;
+    fstream cachefile, inputfile;
     cachefile.open("cache.txt", ios::trunc);
-    fstream inputfile;
     inputfile.open((string)inputfilename + ".txt");
     char buffer[320];
     while (!inputfile.eof())
@@ -60,9 +59,35 @@ void Createcache()
     }
     inputfile.close();
     cachefile.close();
+    system("pause");
 }
 //修改缓存文件
-void Modifycache();
+void Modifycache()
+{
+    fstream cachefile, _cachefile;
+    char buffer[320];
+    cachefile.open("cache.txt");
+    _cachefile.open("_cache.txt");
+    for (int i = 0; i < activemaxlen - x; i++)
+    {
+        cachefile.getline(buffer, 320);
+    }
+    while (!cachefile.eof())
+    {
+        cachefile.getline(buffer, 320);
+        _cachefile << buffer << endl;
+    }
+    cachefile.close();
+    cachefile.open("cache.txt", ios::trunc);
+    while (!_cachefile.eof())
+    {
+        _cachefile.getline(buffer, 320);
+        cachefile << buffer << endl;
+    }
+    cachefile.close();
+    _cachefile.close();
+    remove("_cache.txt");
+}
 //读取内容
 void Read(Livearealist &l)
 {
@@ -100,6 +125,7 @@ void Read(Livearealist &l)
         }
     }
     cachefile.close(); //关闭文件
+    Modifycache();
 }
 //初始化
 void Initialization(Livearealist &l)
@@ -112,13 +138,14 @@ void Initialization(Livearealist &l)
     {
         if (inputfilename != "")
         {
+            Createcache();
             Read(l);
         }
     }
     else
     {
         cout << "输入和输出文件名不能相同" << endl;
-        system("pause");
+        getchar();
         Initialization(l);
     }
 }
@@ -127,9 +154,10 @@ void Insert(Livearealist &l)
 {
     int line;
     string text;
-    char text1[81];
+    char text1[81], buffer;
     Livearealist l1, node;
     cin >> line;
+    getchar();
     getline(cin, text);
     if (count1 == activemaxlen)
     {
@@ -242,11 +270,10 @@ void Switch(Livearealist &l)
         while (l1->next)
         {
             node = l1->next;
-            node->content = node->content->next;
-            while (node->content)
+            while (node->content->next)
             {
-                outputfile << node->content->text;
                 node->content = node->content->next;
+                outputfile << node->content->text;
             }
             outputfile << endl;
             l1->next = node->next;
@@ -263,7 +290,7 @@ void Switch(Livearealist &l)
 void Display(Livearealist l)
 {
     string text;
-    Livearealist node;
+    Livearealist node = l;
     char key;
     int i;
     for (i = 0; i < 20 && l; i++)
