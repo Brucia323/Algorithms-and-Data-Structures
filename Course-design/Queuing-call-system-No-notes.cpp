@@ -1,37 +1,90 @@
 #include <iostream>
 using namespace std;
-int number = 0;
-int state[7] = {-1, -1, -1, -1, -1, -1, -1};
+int number = 0;                              
+int state[7] = {-1, -1, -1, -1, -1, -1, -1}; 
 typedef struct QNode
 {
-    int Number;
-    struct QNode *next;
+    int data;           
+    struct QNode *next; 
 } QNode, *QueuePtr;
 typedef struct
 {
-    QueuePtr front;
-    QueuePtr rear;
+    QueuePtr front; 
+    QueuePtr rear;  
 } LinkQueue;
 
 void Initialization(LinkQueue &q)
 {
-    q.front = q.rear = new QNode;
-    q.front->next = NULL;
+    q.front = q.rear = new QNode; 
+    q.front->next = NULL;         
+}
+
+void qpush(LinkQueue &q, int e)
+{
+    QueuePtr p = new QNode; 
+    p->data = e;
+    p->next = NULL;
+    q.rear->next = p; 
+    q.rear = p;       
+}
+
+int qempty(LinkQueue q)
+{
+    if (q.front == q.rear)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void qpop(LinkQueue &q)
+{
+    if (qempty(q))
+    {
+        return;
+    }
+    QueuePtr p = q.front->next;
+    q.front->next = p->next;
+    if (q.rear == p)
+    {
+        q.rear = q.front;
+    }
+    delete p;
+}
+
+int qsize(LinkQueue q)
+{
+    int count = 0;
+    QueuePtr p = q.front->next;
+    while (!qempty(q))
+    {
+        count++;
+        p = p->next;
+    }
+    return count;
+}
+
+int qfront(LinkQueue q)
+{
+    if (!qempty(q))
+    {
+        return q.front->next->data;
+    }
 }
 
 void Lineup(LinkQueue &q)
 {
-    QueuePtr p = new QNode;
-    p->Number = ++number;
-    p->next = NULL;
-    q.rear->next = p;
-    q.rear = p;
+    number = number + 1; 
+    qpush(q, number);
 }
 
 void Call(LinkQueue q, int vip)
 {
     int i;
-    if (q.front != q.rear)
+    if (!qempty(q))
     {
         if (vip == 0)
         {
@@ -44,7 +97,7 @@ void Call(LinkQueue q, int vip)
             }
             if (i <= 4)
             {
-                cout << "请" << q.front->next->Number << "号到" << i << "号窗口办理业务" << endl;
+                cout << "请" << qfront(q) << "号到" << i << "号窗口办理业务" << endl;
             }
             else
             {
@@ -62,7 +115,7 @@ void Call(LinkQueue q, int vip)
             }
             if (i <= 6)
             {
-                cout << "请" << q.front->next->Number << "号到" << i << "号窗口办理业务" << endl;
+                cout << "请" << qfront(q) << "号到" << i << "号窗口办理业务" << endl;
             }
             else
             {
@@ -83,37 +136,25 @@ void Conduct_business(LinkQueue &q, int window)
         cout << "当前窗口正在办理业务" << endl;
         return;
     }
-    if (q.front == q.rear)
+    if (qempty(q))
     {
-        state[window] = 0;
+        state[window] = 0; 
         cout << "开始办理业务" << endl;
         return;
     }
-    QueuePtr p = q.front->next;
-    state[window] = p->Number;
-    q.front->next = p->next;
-    if (q.rear == p)
-    {
-        q.rear = q.front;
-    }
-    delete p;
+    state[window] = qfront(q); 
+    qpop(q);
     cout << "开始办理业务" << endl;
 }
 
 void Skip(LinkQueue &q)
 {
-    if (q.front == q.rear)
+    if (qempty(q))
     {
         return;
     }
-    QueuePtr p = q.front->next;
-    cout << "已跳过" << p->Number << "号" << endl;
-    q.front->next = p->next;
-    if (q.rear == p)
-    {
-        q.rear = q.front;
-    }
-    delete p;
+    cout << "已跳过" << qfront(q) << "号" << endl;
+    qpop(q);
 }
 
 void Window(int e)
@@ -152,14 +193,7 @@ void Window()
 
 void Queuing(LinkQueue q)
 {
-    int count = 0;
-    QueuePtr p = q.front->next;
-    while (p)
-    {
-        count++;
-        p = p->next;
-    }
-    cout << "当前共" << count << "人等待" << endl;
+    cout << "当前共" << qsize(q) << "人等待" << endl;
 }
 
 void Finish(int e)
@@ -169,7 +203,7 @@ void Finish(int e)
 }
 int main(void)
 {
-    LinkQueue q, vipq;
+    LinkQueue q, vipq; 
     Initialization(q);
     Initialization(vipq);
     while (1)
@@ -181,7 +215,7 @@ int main(void)
         cout << "4.窗口状态" << endl;
         cout << "5.排队状态" << endl;
         cout << "6.办理结束" << endl;
-        // cout << "7.跳过一号" << endl;
+        cout << "7.跳过一号" << endl;
         cin >> option;
         switch (option)
         {
