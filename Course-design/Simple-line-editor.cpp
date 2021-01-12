@@ -235,7 +235,6 @@ void Insert(Livearealist &l)
 void Delete(Livearealist &l)
 {
     int line1, line2 = 0;
-    // char space;
     Livearealist l1, l2, node1, node2;
     cin >> line1;
     //ÅÐ¶Ï¸ñÊ½
@@ -263,7 +262,7 @@ void Delete(Livearealist &l)
         for (int i = 0; l1->next && i < line1 - 1; i++, l1 = l1->next)
             ;
         l2 = l1;
-        for (int i = line1; l2->next && i < line2; i++, l2 = l2->next)
+        for (int i = line1; l2->next && i <= line2; i++, l2 = l2->next)
             ;
         for (node1 = l1->next; node1 != l2; node1 = node2)
         {
