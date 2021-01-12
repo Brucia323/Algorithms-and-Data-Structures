@@ -165,13 +165,13 @@ void Insert(Livearealist &l)
         node = l1->next;
         fstream outputfile;
         outputfile.open((string)outputfilename + ".txt", ios::app);
-        node->content = node->content->next;
-        while (node->content)
+        while (node->content->next)
         {
-            outputfile << node->content->text;
             node->content = node->content->next;
-            outputfile << endl;
+            outputfile << node->content->text;
         }
+        outputfile << endl;
+        outputfile.close();
         l1->next = node->next;
         delete node;
         for (l1 = l1->next; l1; l1->line = l1->line - 1, l1 = l1->next)
