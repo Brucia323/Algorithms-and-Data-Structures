@@ -1,3 +1,11 @@
+/*
+ * @Author: 周晨阳
+ * @Date: 2021-01-09 09:39:04
+ * @LastEditTime: 2021-01-14 12:39:01
+ * @LastEditors: 周晨阳
+ * @Description: 简单行编辑程序
+ * @FilePath: \Algorithms-and-Data-Structures\Course-design\Simple-line-editor.cpp
+ */
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -20,13 +28,21 @@ typedef struct Livearea
     Contentlist content; //内容
     struct Livearea *next;
 } Liveareanode, *Livearealist;
-//内容初始化
+/**
+ * @description:内容初始化
+ * @param {Contentlist} &c
+ * @return {*}
+ */
 void Inicontent(Contentlist &c)
 {
     c = new Contentnode;
     c->next = NULL;
 }
-//活区初始化
+/**
+ * @description:活区初始化
+ * @param {Livearealist} &l
+ * @return {*}
+ */
 void Inilivearea(Livearealist &l)
 {
     l = new Liveareanode;
@@ -34,7 +50,12 @@ void Inilivearea(Livearealist &l)
     Inicontent(l->content);
     l->next = NULL;
 }
-//内容插入
+/**
+ * @description:内容插入
+ * @param {Contentlist} &c
+ * @param {char} text
+ * @return {*}
+ */
 void Insert(Contentlist &c, char text[])
 {
     Contentlist c1 = c, node;
@@ -45,7 +66,11 @@ void Insert(Contentlist &c, char text[])
     node->next = c1->next;
     c1->next = node;
 }
-//创建缓存文件
+/**
+ * @description:创建缓存文件
+ * @param {*}
+ * @return {*}
+ */
 void Createcache()
 {
     fstream cachefile, inputfile;
@@ -67,7 +92,11 @@ void Createcache()
     cachefile.close();
     inputfile.close();
 }
-//修改缓存文件
+/**
+ * @description:修改缓存文件
+ * @param {*}
+ * @return {*}
+ */
 void Modifycache()
 {
     fstream cachefile, _cachefile;
@@ -112,7 +141,11 @@ void Modifycache()
     _cachefile.close();
     remove("_cache.txt");
 }
-//读取内容
+/**
+ * @description:读取内容
+ * @param {Livearealist} &l
+ * @return {*}
+ */
 void Read(Livearealist &l)
 {
     fstream cachefile;
@@ -151,7 +184,11 @@ void Read(Livearealist &l)
     cachefile.close(); //关闭文件
     Modifycache();
 }
-//初始化
+/**
+ * @description:初始化
+ * @param {Livearealist} &l
+ * @return {*}
+ */
 void Initialization(Livearealist &l)
 {
     cout << "请输入“输入文件”文件名：";
@@ -173,7 +210,11 @@ void Initialization(Livearealist &l)
         Initialization(l);
     }
 }
-//插入
+/**
+ * @description:插入
+ * @param {Livearealist} &l
+ * @return {*}
+ */
 void Insert(Livearealist &l)
 {
     int line;
@@ -231,7 +272,11 @@ void Insert(Livearealist &l)
         return;
     }
 }
-//删除
+/**
+ * @description:删除
+ * @param {Livearealist} &l
+ * @return {*}
+ */
 void Delete(Livearealist &l)
 {
     int line1, line2 = 0;
@@ -281,7 +326,11 @@ void Delete(Livearealist &l)
         }
     }
 }
-//活区切换
+/**
+ * @description:活区切换
+ * @param {Livearealist} &l
+ * @return {*}
+ */
 void Switch(Livearealist &l)
 {
     fstream outputfile;
@@ -318,7 +367,11 @@ void Switch(Livearealist &l)
         }
     }
 }
-//活区显示
+/**
+ * @description:活区显示
+ * @param {Livearealist} l
+ * @return {*}
+ */
 void Display(Livearealist l)
 {
     string text;
