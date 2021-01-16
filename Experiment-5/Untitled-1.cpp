@@ -6,118 +6,118 @@ using namespace std;
 typedef struct BiNode
 {
     TElemType data;
-    struct BiNode *lchild, *rchild; //å·¦å³å­©å­æŒ‡é’ˆ
+    struct BiNode *lchild, *rchild; //×óÓÒº¢×ÓÖ¸Õë
 } BiNode, *BiTree;
 
-//1ã€è¾“å…¥å­—ç¬¦åºåˆ—,å»ºç«‹äºŒå‰é“¾è¡¨
+//1¡¢ÊäÈë×Ö·ûĞòÁĞ,½¨Á¢¶ş²æÁ´±í
 
-//æŒ‰å…ˆåºæ¬¡åºè¾“å…¥äºŒå‰æ ‘ä¸­ç»“ç‚¹çš„å€¼ï¼ˆä¸€ä¸ªå­—ç¬¦ï¼‰ï¼Œåˆ›å»ºäºŒå‰é“¾è¡¨è¡¨ç¤ºçš„äºŒå‰æ ‘T
+//°´ÏÈĞò´ÎĞòÊäÈë¶ş²æÊ÷ÖĞ½áµãµÄÖµ£¨Ò»¸ö×Ö·û£©£¬´´½¨¶ş²æÁ´±í±íÊ¾µÄ¶ş²æÊ÷T
 void CreateBiTree(BiTree &T)
 {
     TElemType ch;
     cin >> ch;
     if (ch == '#')
-        T = NULL; //é€’å½’ç»“æŸï¼Œå»ºç©ºæ ‘
-    else          //é€’å½’åˆ›å»ºäºŒå‰æ ‘
+        T = NULL; //µİ¹é½áÊø£¬½¨¿ÕÊ÷
+    else          //µİ¹é´´½¨¶ş²æÊ÷
     {
-        T = new BiNode;          //ç”Ÿæˆæ ¹èŠ‚ç‚¹
-        T->data = ch;            //æ ¹èŠ‚ç‚¹æ•°æ®åŸŸç½®ä¸ºch
-        CreateBiTree(T->lchild); //é€’å½’åˆ›å»ºå·¦å­æ ‘
-        CreateBiTree(T->rchild); //é€’å½’åˆ›å»ºå³å­æ ‘
+        T = new BiNode;          //Éú³É¸ù½Úµã
+        T->data = ch;            //¸ù½ÚµãÊı¾İÓòÖÃÎªch
+        CreateBiTree(T->lchild); //µİ¹é´´½¨×ó×ÓÊ÷
+        CreateBiTree(T->rchild); //µİ¹é´´½¨ÓÒ×ÓÊ÷
     }                            //else
 }
 
-//2ã€æŒ‰å…ˆæ ¹ã€ä¸­æ ¹å’Œåæ ¹éå†äºŒå‰æ ‘(é€’å½’ç®—æ³•)
-//3ã€æŒ‰æŸç§å½¢å¼è¾“å‡ºæ•´æ£µäºŒå‰æ ‘
+//2¡¢°´ÏÈ¸ù¡¢ÖĞ¸ùºÍºó¸ù±éÀú¶ş²æÊ÷(µİ¹éËã·¨)
+//3¡¢°´Ä³ÖÖĞÎÊ½Êä³öÕû¿Ã¶ş²æÊ÷
 
-//å…ˆåºéå†äºŒå‰æ ‘Tçš„é€’å½’ç®—æ³•
+//ÏÈĞò±éÀú¶ş²æÊ÷TµÄµİ¹éËã·¨
 void PreOrderTraverse(BiTree T)
 {
-    if (T) //è‹¥äºŒå‰æ ‘éç©º
+    if (T) //Èô¶ş²æÊ÷·Ç¿Õ
     {
-        cout << T->data;             //è®¿é—®æ ¹èŠ‚ç‚¹
-        PreOrderTraverse(T->lchild); //å…ˆåºéå†å·¦å­æ ‘
-        PreOrderTraverse(T->rchild); //å…ˆåºéå†å³å­æ ‘
+        cout << T->data;             //·ÃÎÊ¸ù½Úµã
+        PreOrderTraverse(T->lchild); //ÏÈĞò±éÀú×ó×ÓÊ÷
+        PreOrderTraverse(T->rchild); //ÏÈĞò±éÀúÓÒ×ÓÊ÷
     }
 }
-//ä¸­åºéå†äºŒå‰æ ‘Tçš„é€’å½’ç®—æ³•
+//ÖĞĞò±éÀú¶ş²æÊ÷TµÄµİ¹éËã·¨
 void InOrderTraverse(BiTree T)
 {
-    if (T) //è‹¥äºŒå‰æ ‘éç©º
+    if (T) //Èô¶ş²æÊ÷·Ç¿Õ
     {
-        InOrderTraverse(T->lchild); //ä¸­åºéå†å·¦å­æ ‘
-        cout << T->data;            //è®¿é—®æ ¹èŠ‚ç‚¹
-        InOrderTraverse(T->rchild); //ä¸­åºéå†å³å­æ ‘
+        InOrderTraverse(T->lchild); //ÖĞĞò±éÀú×ó×ÓÊ÷
+        cout << T->data;            //·ÃÎÊ¸ù½Úµã
+        InOrderTraverse(T->rchild); //ÖĞĞò±éÀúÓÒ×ÓÊ÷
     }
 }
-//ååºéå†äºŒå‰æ ‘Tçš„é€’å½’ç®—æ³•
+//ºóĞò±éÀú¶ş²æÊ÷TµÄµİ¹éËã·¨
 void PostOrderTraverse(BiTree T)
 {
-    if (T) //è‹¥äºŒå‰æ ‘éç©º
+    if (T) //Èô¶ş²æÊ÷·Ç¿Õ
     {
-        PostOrderTraverse(T->lchild); //ååºéå†å·¦å­æ ‘
-        PostOrderTraverse(T->rchild); //ååºéå†å³å­æ ‘
-        cout << T->data;              //è®¿é—®æ ¹èŠ‚ç‚¹
+        PostOrderTraverse(T->lchild); //ºóĞò±éÀú×ó×ÓÊ÷
+        PostOrderTraverse(T->rchild); //ºóĞò±éÀúÓÒ×ÓÊ÷
+        cout << T->data;              //·ÃÎÊ¸ù½Úµã
     }
 }
 
-//4ã€æ±‚äºŒåˆæ ‘çš„é«˜åº¦
+//4¡¢Çó¶şÓÖÊ÷µÄ¸ß¶È
 
-//è®¡ç®—äºŒå‰æ ‘Tçš„æ·±åº¦
+//¼ÆËã¶ş²æÊ÷TµÄÉî¶È
 int BiTreeDepth(BiTree T)
 {
     int m, n;
     if (T == NULL)
-        return 0; //å¦‚æœæ˜¯ç©ºæ ‘ï¼Œæ·±åº¦ä¸º0ï¼Œé€’å½’ç»“æŸ
+        return 0; //Èç¹ûÊÇ¿ÕÊ÷£¬Éî¶ÈÎª0£¬µİ¹é½áÊø
     else
     {
-        m = BiTreeDepth(T->lchild); //é€’å½’è®¡ç®—å·¦å­æ ‘çš„æ·±åº¦è®°ä¸ºm
-        n = BiTreeDepth(T->rchild); //é€’å½’è®¡ç®—å³å­æ ‘çš„æ·±åº¦è®°ä¸ºn
+        m = BiTreeDepth(T->lchild); //µİ¹é¼ÆËã×ó×ÓÊ÷µÄÉî¶È¼ÇÎªm
+        n = BiTreeDepth(T->rchild); //µİ¹é¼ÆËãÓÒ×ÓÊ÷µÄÉî¶È¼ÇÎªn
         if (m > n)
-            return (m + 1); //äºŒå‰æ ‘çš„æ·±åº¦ä¸ºmä¸nçš„è¾ƒå¤§è€…åŠ 1
+            return (m + 1); //¶ş²æÊ÷µÄÉî¶ÈÎªmÓënµÄ½Ï´óÕß¼Ó1
         else
             return (n + 1);
     }
 }
 
-//5ã€æ±‚äºŒå‰æ ‘çš„å¶èŠ‚ç‚¹ä¸ªæ•°
+//5¡¢Çó¶ş²æÊ÷µÄÒ¶½Úµã¸öÊı
 
-//è®¡ç®—å¶å­ç»“ç‚¹çš„ä¸ªæ•°
+//¼ÆËãÒ¶×Ó½áµãµÄ¸öÊı
 void Count(BiTree T, int &count)
 {
     if (T == NULL)
-        return; //å¦‚æœæ˜¯ç©ºæ ‘ï¼Œåˆ™å¶å­ç»“ç‚¹ä¸ªæ•°ä¸º0ï¼Œé€’å½’ç»“æŸ
+        return; //Èç¹ûÊÇ¿ÕÊ÷£¬ÔòÒ¶×Ó½áµã¸öÊıÎª0£¬µİ¹é½áÊø
     if (T->lchild)
-        Count(T->lchild, count); //éå¶å­ç»“ç‚¹ï¼Œé€’å½’
+        Count(T->lchild, count); //·ÇÒ¶×Ó½áµã£¬µİ¹é
     if (T->rchild)
-        Count(T->rchild, count); //éå¶å­ç»“ç‚¹ï¼Œé€’å½’
+        Count(T->rchild, count); //·ÇÒ¶×Ó½áµã£¬µİ¹é
     if (T->lchild == NULL && T->rchild == NULL)
-        count++; //å¶å­ç»“ç‚¹ï¼Œè®¡æ•°
+        count++; //Ò¶×Ó½áµã£¬¼ÆÊı
 }
 
-//6ã€äº¤æ¢äºŒå‰æ ‘çš„å·¦å³å­æ ‘
+//6¡¢½»»»¶ş²æÊ÷µÄ×óÓÒ×ÓÊ÷
 
-//äº¤æ¢äºŒå‰æ ‘Tçš„å·¦å³å­æ ‘
+//½»»»¶ş²æÊ÷TµÄ×óÓÒ×ÓÊ÷
 void ExchangeChild(BiTree &T)
 {
     if (T->lchild == NULL && T->rchild == NULL)
-        return;            //æ— å·¦å³å­æ ‘ï¼Œé€’å½’ç»“æŸ
-    if (T->lchild == NULL) //å·¦å­æ ‘ä¸ºç©ºï¼Œåªæœ‰å³å­æ ‘
+        return;            //ÎŞ×óÓÒ×ÓÊ÷£¬µİ¹é½áÊø
+    if (T->lchild == NULL) //×ó×ÓÊ÷Îª¿Õ£¬Ö»ÓĞÓÒ×ÓÊ÷
     {
         T->lchild = T->rchild;
         T->rchild = NULL;
         ExchangeChild(T->lchild);
     }
-    else if (T->rchild == NULL) //å³å­æ ‘ä¸ºç©ºï¼Œåªæœ‰å·¦å­æ ‘
+    else if (T->rchild == NULL) //ÓÒ×ÓÊ÷Îª¿Õ£¬Ö»ÓĞ×ó×ÓÊ÷
     {
         T->rchild = T->lchild;
         T->lchild = NULL;
         ExchangeChild(T->rchild);
     }
-    else //æœ‰å·¦å³å­æ ‘
+    else //ÓĞ×óÓÒ×ÓÊ÷
     {
-        BiTree empty;      //åˆ›å»ºç©ºç»“ç‚¹
-        empty = T->lchild; //ä¸´æ—¶å­˜å‚¨å…¶ä¸­ä¸€æ£µå­æ ‘
+        BiTree empty;      //´´½¨¿Õ½áµã
+        empty = T->lchild; //ÁÙÊ±´æ´¢ÆäÖĞÒ»¿Ã×ÓÊ÷
         T->lchild = T->rchild;
         T->rchild = empty;
         ExchangeChild(T->lchild);
@@ -125,43 +125,43 @@ void ExchangeChild(BiTree &T)
     }
 }
 
-//7ã€å®ç°äºŒå‰æ ‘çš„å±‚æ¬¡éå†ï¼ˆå¯ä»¥å€Ÿç”¨é˜Ÿåˆ—å®ç°ï¼‰
+//7¡¢ÊµÏÖ¶ş²æÊ÷µÄ²ã´Î±éÀú£¨¿ÉÒÔ½èÓÃ¶ÓÁĞÊµÏÖ£©
 
-//å±‚æ¬¡éå†äºŒå‰æ ‘T
+//²ã´Î±éÀú¶ş²æÊ÷T
 void LevelOrderTraverse(BiTree &T)
 {
     if (T == NULL)
-        return; //æ ‘ç©º
+        return; //Ê÷¿Õ
     queue<BiTree> Q;
     Q.push(T);
     while (!Q.empty())
     {
         T = Q.front();
         Q.pop();
-        cout << T->data; //è¾“å‡ºå¯¹åº”ç»“ç‚¹æ•°æ®
+        cout << T->data; //Êä³ö¶ÔÓ¦½áµãÊı¾İ
         if (T->lchild)
-            Q.push(T->lchild); //å·¦å­©å­å…¥é˜Ÿ
+            Q.push(T->lchild); //×óº¢×ÓÈë¶Ó
         if (T->rchild)
-            Q.push(T->rchild); //å³å­©å­å…¥é˜Ÿ
+            Q.push(T->rchild); //ÓÒº¢×ÓÈë¶Ó
     }
 }
 
 int main(void)
 {
     BiTree T, T1;
-    cout << "è¯·è¾“å…¥å­—ç¬¦åºåˆ—,ä»¥å»ºç«‹äºŒå‰é“¾è¡¨:";
+    cout << "ÇëÊäÈë×Ö·ûĞòÁĞ,ÒÔ½¨Á¢¶ş²æÁ´±í:";
     CreateBiTree(T);
     while (1)
     {
-        cout << "1.æŒ‰å…ˆåºåºåˆ—è¾“å‡ºæ•´æ£µäºŒå‰æ ‘ã€‚" << endl;
-        cout << "2.æŒ‰ä¸­åºåºåˆ—è¾“å‡ºæ•´æ£µäºŒå‰æ ‘ã€‚" << endl;
-        cout << "3.æŒ‰ååºåºåˆ—è¾“å‡ºæ•´æ£µäºŒå‰æ ‘ã€‚" << endl;
-        cout << "4.æ±‚äºŒå‰æ ‘çš„é«˜åº¦ã€‚" << endl;
-        cout << "5.æ±‚äºŒå‰æ ‘çš„å¶ç»“ç‚¹ä¸ªæ•°ã€‚" << endl;
-        cout << "6.äº¤æ¢äºŒå‰æ ‘çš„å·¦å³å­æ ‘ã€‚" << endl;
-        cout << "7.æŒ‰å±‚æ¬¡éå†è¾“å‡ºæ•´æ£µäºŒå‰æ ‘ã€‚" << endl;
-        cout << "0.é€€å‡ºã€‚" << endl;
-        cout << "è¯·è¾“å…¥æƒ³è¦è¿›è¡Œçš„æ“ä½œåºå·ï¼š";
+        cout << "1.°´ÏÈĞòĞòÁĞÊä³öÕû¿Ã¶ş²æÊ÷¡£" << endl;
+        cout << "2.°´ÖĞĞòĞòÁĞÊä³öÕû¿Ã¶ş²æÊ÷¡£" << endl;
+        cout << "3.°´ºóĞòĞòÁĞÊä³öÕû¿Ã¶ş²æÊ÷¡£" << endl;
+        cout << "4.Çó¶ş²æÊ÷µÄ¸ß¶È¡£" << endl;
+        cout << "5.Çó¶ş²æÊ÷µÄÒ¶½áµã¸öÊı¡£" << endl;
+        cout << "6.½»»»¶ş²æÊ÷µÄ×óÓÒ×ÓÊ÷¡£" << endl;
+        cout << "7.°´²ã´Î±éÀúÊä³öÕû¿Ã¶ş²æÊ÷¡£" << endl;
+        cout << "0.ÍË³ö¡£" << endl;
+        cout << "ÇëÊäÈëÏëÒª½øĞĞµÄ²Ù×÷ĞòºÅ£º";
         int i;
         cin >> i;
         int count = 0;
@@ -180,15 +180,15 @@ int main(void)
             break;
         case 4:
             high = BiTreeDepth(T);
-            cout << "äºŒå‰æ ‘çš„é«˜åº¦ä¸º" << high;
+            cout << "¶ş²æÊ÷µÄ¸ß¶ÈÎª" << high;
             break;
         case 5:
             Count(T, count);
-            cout << "ä¸€å…±" << count << "ä¸ªå¶å­ç»“ç‚¹";
+            cout << "Ò»¹²" << count << "¸öÒ¶×Ó½áµã";
             break;
         case 6:
             ExchangeChild(T);
-            cout << "å®Œæˆ";
+            cout << "Íê³É";
             break;
         case 7:
             LevelOrderTraverse(T1);
