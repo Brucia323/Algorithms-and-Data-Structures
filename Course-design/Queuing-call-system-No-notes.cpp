@@ -1,31 +1,31 @@
 #include <iostream>
 using namespace std;
-int number = 0;                              
-int state[7] = {-1, -1, -1, -1, -1, -1, -1}; 
+int number = 0;
+int state[7] = {-1, -1, -1, -1, -1, -1, -1};
 typedef struct QNode
 {
-    int data;           
-    struct QNode *next; 
+    int data;
+    struct QNode *next;
 } QNode, *QueuePtr;
 typedef struct
 {
-    QueuePtr front; 
-    QueuePtr rear;  
+    QueuePtr front;
+    QueuePtr rear;
 } LinkQueue;
 
 void Initialization(LinkQueue &q)
 {
-    q.front = q.rear = new QNode; 
-    q.front->next = NULL;         
+    q.front = q.rear = new QNode;
+    q.front->next = NULL;
 }
 
 void qpush(LinkQueue &q, int e)
 {
-    QueuePtr p = new QNode; 
+    QueuePtr p = new QNode;
     p->data = e;
     p->next = NULL;
-    q.rear->next = p; 
-    q.rear = p;       
+    q.rear->next = p;
+    q.rear = p;
 }
 
 int qempty(LinkQueue q)
@@ -77,7 +77,7 @@ int qfront(LinkQueue q)
 
 void Lineup(LinkQueue &q)
 {
-    number = number + 1; 
+    number = number + 1;
     qpush(q, number);
 }
 
@@ -138,11 +138,11 @@ void Conduct_business(LinkQueue &q, int window)
     }
     if (qempty(q))
     {
-        state[window] = 0; 
+        state[window] = 0;
         cout << "开始办理业务" << endl;
         return;
     }
-    state[window] = qfront(q); 
+    state[window] = qfront(q);
     qpop(q);
     cout << "开始办理业务" << endl;
 }
@@ -203,7 +203,7 @@ void Finish(int e)
 }
 int main(void)
 {
-    LinkQueue q, vipq; 
+    LinkQueue q, vipq;
     Initialization(q);
     Initialization(vipq);
     while (1)

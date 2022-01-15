@@ -7,7 +7,7 @@
 6a99f68a-6578-46e0-9232-fbf0adf3691f.jpg
 
 现在小Z得到了一串这种二叉树的中序序列，但不知道怎么把这棵树还原出来，请大家帮帮他吧！*/
-#include<iostream>
+#include <iostream>
 using namespace std;
 typedef struct BiTNode
 {
@@ -67,7 +67,7 @@ namespace FastIO
     void print() { putchar('\n'); }
 
     template <typename T, typename... T2>
-    inline void read(T &x, T2 &... oth)
+    inline void read(T &x, T2 &...oth)
     {
         x = 0;
         char ch = getchar();

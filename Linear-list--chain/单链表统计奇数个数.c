@@ -29,11 +29,11 @@ int OddNumber(LinkList L)
     p = L->next;
     while (p)
     {
-        if(p->data%2!=0)
+        if (p->data % 2 != 0)
         {
             i++;
         }
-        else if(p->data==1)
+        else if (p->data == 1)
         {
             i++;
         }

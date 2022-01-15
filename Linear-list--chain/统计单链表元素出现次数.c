@@ -49,9 +49,9 @@ int GetCount(LinkList L, ElemType e)
     LinkList p;
     p = L->next;
     int i = 0;
-    while(p)
+    while (p)
     {
-        if(p->data==e)
+        if (p->data == e)
         {
             i++;
         }

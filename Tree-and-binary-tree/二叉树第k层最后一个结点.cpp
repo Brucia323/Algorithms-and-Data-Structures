@@ -1,11 +1,11 @@
 /*给定一棵非空二叉树，其结点的数据域为不等于0的整数，请编写程序输出该二叉树中第k层最后一个结点的值，若不存在则输出0。*/
 #include <iostream>
-#include<queue>
+#include <queue>
 using namespace std;
 int k = 0;
 typedef struct BiTNode
 {
-    int data;                       //结点数据域
+    int data;                        //结点数据域
     struct BiTNode *lchild, *rchild; //左右孩子指针
 } BiTNode, *BiTree;
 void CreateBiTree(BiTree &T)
@@ -27,7 +27,7 @@ struct node
     BiTree T;
     int c;
 };
-void Get_layers(BiTree T,int F[])
+void Get_layers(BiTree T, int F[])
 {
     if (T == NULL)
         return;
@@ -40,7 +40,7 @@ void Get_layers(BiTree T,int F[])
     {
         now = Q.front();
         Q.pop();
-        if(now.T->data)
+        if (now.T->data)
             F[now.c] = now.T->data;
         node next;
         next.c = now.c + 1;
@@ -61,7 +61,7 @@ int main(void)
     BiTree T;
     int F[1000] = {0};
     CreateBiTree(T);
-    Get_layers(T,F);
+    Get_layers(T, F);
     cin >> k;
     cout << F[k] << endl;
 }

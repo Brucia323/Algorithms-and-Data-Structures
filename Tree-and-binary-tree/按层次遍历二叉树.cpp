@@ -29,7 +29,7 @@ void LevelOrderTraverse(BiTree &T)
     Q.push(T);
     while (!Q.empty())
     {
-        T=Q.front();
+        T = Q.front();
         Q.pop();
         cout << T->data;
         if (T->lchild)

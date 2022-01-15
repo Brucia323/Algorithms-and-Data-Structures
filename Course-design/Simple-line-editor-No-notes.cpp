@@ -5,19 +5,19 @@
 using namespace std;
 #define activemaxlen 100
 #define x 95
-string inputfilename, outputfilename; 
+string inputfilename, outputfilename;
 int count1;
 
 typedef struct Content
 {
-    char text[81]; 
+    char text[81];
     struct Content *next;
 } Contentnode, *Contentlist;
 
 typedef struct Livearea
 {
-    int line;            
-    Contentlist content; 
+    int line;
+    Contentlist content;
     struct Livearea *next;
 } Liveareanode, *Livearealist;
 
@@ -50,7 +50,7 @@ void Createcache()
 {
     fstream cachefile, inputfile;
     inputfile.open((string)inputfilename + ".txt");
-    cachefile.open("cache.txt", ios::out); 
+    cachefile.open("cache.txt", ios::out);
     char buffer[320];
     if (cachefile.is_open())
     {
@@ -119,7 +119,7 @@ void Read(Livearealist &l)
     count1 = 0;
     char buffer[320], text1[81];
     string text;
-    cachefile.open("cache.txt"); 
+    cachefile.open("cache.txt");
     if (cachefile.eof())
     {
         cachefile.close();
@@ -137,7 +137,7 @@ void Read(Livearealist &l)
         text = (string)buffer;
         for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
         {
-            strcpy(text1, text.substr(j, k).c_str()); 
+            strcpy(text1, text.substr(j, k).c_str());
             Insert(node->content, text1);
         }
         node->next = l1->next;
@@ -148,7 +148,7 @@ void Read(Livearealist &l)
             break;
         }
     }
-    cachefile.close(); 
+    cachefile.close();
     Modifycache();
 }
 
@@ -202,12 +202,12 @@ void Insert(Livearealist &l)
             ;
         count1--;
     }
-    
+
     if (line >= 0 && line < activemaxlen)
     {
         count1++;
         l1 = l;
-        
+
         for (int i = 0; l1->next && i < line; i++, l1 = l1->next)
             ;
         node = new Liveareanode;
@@ -215,13 +215,13 @@ void Insert(Livearealist &l)
         Inicontent(node->content);
         for (int i = text.length(), j = 0, k = 80; i; i /= 80, j += 80, k += 80)
         {
-            strcpy(text1, text.substr(j, k).c_str()); 
+            strcpy(text1, text.substr(j, k).c_str());
             Insert(node->content, text1);
         }
         node->next = l1->next;
         l1->next = node;
         l1 = l1->next;
-        
+
         for (l1 = l1->next; l1; l1->line = l1->line + 1, l1 = l1->next)
             ;
     }
@@ -237,7 +237,7 @@ void Delete(Livearealist &l)
     int line1, line2 = 0;
     Livearealist l1, l2, node1, node2;
     cin >> line1;
-    
+
     if (getchar() == ' ')
     {
         cin >> line2;
@@ -272,7 +272,7 @@ void Delete(Livearealist &l)
         l1->next = l2->next;
         delete l2;
     }
-    
+
     if (l1->next)
     {
         for (l1->next->line = l1->line + 1, l1 = l1->next; l1->next; l1 = l1->next)
@@ -287,7 +287,7 @@ void Switch(Livearealist &l)
     fstream outputfile;
     Livearealist l1, node;
     l1 = l;
-    outputfile.open((string)outputfilename + ".txt", ios::app); 
+    outputfile.open((string)outputfilename + ".txt", ios::app);
     if (outputfile.is_open())
     {
         while (l1->next)
@@ -306,7 +306,7 @@ void Switch(Livearealist &l)
             delete node;
         }
     }
-    outputfile.close(); 
+    outputfile.close();
     if (inputfilename != "")
     {
         fstream cachefile;
@@ -322,7 +322,7 @@ void Switch(Livearealist &l)
 void Display(Livearealist l)
 {
     string text;
-    Livearealist node; 
+    Livearealist node;
     char key;
     int i;
     for (i = 0; i < 20 && l; i++)

@@ -45,15 +45,15 @@ void print(LinkList L)
 /* 请在这里填写答案 */
 int delete_link(LinkList L, int i)
 {
-    LinkList p,q;
+    LinkList p, q;
     p = L;
     int j = 0;
-    while ((p->next)&&(j<i-1))
+    while ((p->next) && (j < i - 1))
     {
         p = p->next;
         ++j;
     }
-    if (!(p->next)||(j>i-1))
+    if (!(p->next) || (j > i - 1))
     {
         return 0;
     }

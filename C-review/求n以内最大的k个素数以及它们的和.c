@@ -21,6 +21,6 @@ int main(void)
     for (i = 0; i < k; i++)
         sum += a[i];
     for (i = 0; i < k - 1; i++)
-        printf("%d+", a[i]);
-    printf("%d=%d", a[k - 1], sum);
+        printf("%d + ", a[i]);
+    printf("%d = %d", a[k - 1], sum);
 }
